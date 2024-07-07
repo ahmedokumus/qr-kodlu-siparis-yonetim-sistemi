@@ -1,0 +1,82 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div class="modal fade" id="UpdateCategory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="UpdateCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="UpdateCategoryLabel">Kategori Güncelle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x"></i></button>
+            </div>
+            <form method="post" action="@Url.Action("UpdateCategory","Category")">
+                <div class="modal-body">
+                    @* <input type="hidden" id="CategoryId" name="Id"> *@
+                    <div class="row">
+                        <div class="col-sm-12 col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="m-0">
+                                        <label class="form-label">Id <span class="text-red">*</span></label>
+                                        <input id="CategoryId" type="text" class="form-control" placeholder="" disabled="disabled">
+                                        <input hidden="" name="Id" id="HiddenInputCategoryId" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="m-0">
+                                        <label class="form-label">Kategori Adı <span class="text-red">*</span></label>
+                                        <input id="CategoryName" name="Name" type="text" class="form-control" placeholder="...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="m-0">
+                                        <label class="form-label">Durum <span class="text-red">*</span></label>
+                                        <select id="CategoryStatus" name="Status" class="form-select" aria-label="Default select example">
+                                            <option value="True">Açık</option>
+                                            <option value="False">Kapalı</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openUpdateModal(id) {
+        const url = `/Category/UpdateCategoryGet/${id}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const category = data.data;
+                    document.getElementById('HiddenInputCategoryId').value = category.id || '';
+                    document.getElementById('CategoryId').value = category.id || '';
+                    document.getElementById('CategoryName').value = category.name || '';
+                    document.getElementById('CategoryStatus').value = category.status ? "True" : "False";  
+                    $('#UpdateCategory').modal('show');
+                } else {
+                    console.error('API request failed or returned unsuccessful response');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>

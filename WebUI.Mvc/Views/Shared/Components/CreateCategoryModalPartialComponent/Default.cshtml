@@ -1,0 +1,51 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<form method="post" action="@Url.Action("CreateCategory","Category")">
+    <div class="modal fade" id="CreateCategory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="CreateCategoryLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="CreateCategoryLabel">Kategori Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x"></i></button>
+                </div>
+                <div class="modal-body modal-lg">
+                    <div class="row">
+                        <div class="col-sm-12 col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="m-0">
+                                        <label class="form-label">Kategori Adı <span class="text-red">*</span></label>
+                                        <input name="Name" type="text" class="form-control" placeholder="...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="m-0">
+                                        <label class="form-label">Durum</label>
+                                        <select name="Status" class="form-select" aria-label="Default select example">
+                                            <option value="True" selected>Açık</option>
+                                            <option value="False">Kapalı</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-success" data-bs-dismiss="modal"
+                            data-bs-dismiss="modal">
+                        Kaydet
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

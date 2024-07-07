@@ -1,0 +1,112 @@
+﻿@model ListResponseModel<ResultProductsWithCategoriesViewModel>
+
+@{
+    ViewData["Title"] = "ProductList";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        // Butona tıklama olayı
+        $('.updateButton, #addCategoryButton').click(function () {
+            $.ajax({
+                url: '@Url.Action("GetCategories", "Product")', // Doğru URL'yi kullanın
+                type: "GET",
+                dataType: "json",
+                success: function (response) {
+                    if (response.data && response.data.length > 0) {
+                        $('.updateCategoryId, #CategoryId').empty(); // Mevcut seçenekleri temizle
+                        $.each(response.data, function (index, category) {
+                            $('.updateCategoryId, #CategoryId').append(
+                                $("<option></option>").attr("value", category.id).text(category.name)
+                            );
+                        });
+                    } else {
+                        $('.updateCategoryId, #CategoryId').append(
+                            $("<option></option>").attr("value", "").text("Kategori bulunamadı")
+                        );
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error: ' + error);
+                    $('.updateCategoryId, #CategoryId').append(
+                        $("<option></option>").attr("value", "").text("Hata oluştu")
+                    );
+                }
+            });
+        });
+    });
+</script>
+
+<div class="row">
+    <div class="col-6 align-self-center">
+        <p class="fs-4">Ürün Listesi</p>
+    </div>
+    <div class="col-6">
+        <div class="d-flex justify-content-end">
+            <button id="addCategoryButton" type="submit" class="btn btn-primary d-flex justify-content-between" data-bs-toggle="modal"
+                    data-bs-target="#CreateProduct">
+                <i class="bi bi-plus"></i> Ekle
+            </button>
+            @* <a href="@Url.Action("CreateCategory", "Category")" type="button" class="btn btn-primary d-flex justify-content-center"><i class="bi bi-plus-square"></i> Ekle</a> *@
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table m-0">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Kategori</th>
+                <th>Ürün Adı</th>
+                <th>Fiyat</th>
+                <th>Görsel</th>
+                <th>Durum</th>
+                <th class="text-right">Oluşturma</th>
+                <th class="text-right">Güncelleme</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Data!)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.CategoryName</td>
+                    <td>@item.ProductName</td>
+                    <td>@item.ProductPrice</td>
+                    <td>@item.ProductImageUrl</td>
+                    <td>
+                        @if (item.Status)
+                        {
+                            <span class="badge shade-green">Açık</span>
+                        }
+                        else
+                        {
+                            <span class="badge shade-red">Kapalı</span>
+                        }
+                    </td>
+                    <td class="text-right">@item.CreatedDate</td>
+                    <td class="text-right">
+                        @(item.UpdatedDate != null ? item.UpdatedDate : @Html.DisplayName("Güncellenmedi"))
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-warning btn-rounded d-flex justify-content-evenly updateButton" data-bs-toggle="modal"
+                                data-bs-target="#UpdateProduct" onclick="openUpdateModal('@item.Id')">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("DeleteProduct", "Product", new { id = item.Id })" class="btn btn-danger btn-sm btn-rounded d-flex justify-content-evenly"><i class="bi bi-trash"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@await Component.InvokeAsync("CreateProductModalPartialComponent")
+
+@await Component.InvokeAsync("UpdateProductModalPartialComponent")
